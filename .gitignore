@@ -1,0 +1,4 @@
+vendor/
+.idea/
+src/data/cache/*
+src/data/session/*

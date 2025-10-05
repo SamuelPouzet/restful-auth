@@ -1,0 +1,28 @@
+{
+    "name": "samuelpouzet/restful-auth",
+    "description": "authentication module for my restful module",
+    "type": "module",
+    "license": [
+        "LGPL-3.0-or-later"
+    ],
+    "require": {
+        "php": ">=8.3",
+        "samuelpouzet/restful": "^0.5.2",
+        "lcobucci/jwt": "^5.5",
+        "samuelpouzet/crypt": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Samuelpouzet\\RestfulAuth\\": "src/"
+        }
+    },
+    "laminas": {
+        "component": "SamuelPouzet\\RestfulAuth"
+    },
+    "authors": [
+        {
+            "name": "Sam POUZET",
+            "email": "samuel.pouzet@yahoo.fr"
+        }
+    ]
+}
