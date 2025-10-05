@@ -2,15 +2,9 @@
 
 namespace Samuelpouzet\RestfulAuth\Strategy\Enumerations;
 
-use Application\Controller\AuthenticateController;
-use Authentication\Service\AccountService;
-use Authentication\Service\Factory\AccountServiceFactory;
-use Samuelpouzet\RestfulAuth\Listener\Factory\RouteListenerFactory;
-use Samuelpouzet\RestfulAuth\Listener\RouteListener;
-use Samuelpouzet\RestfulAuth\Service\AuthenticationService;
-use Samuelpouzet\RestfulAuth\Service\Factory\AuthenticationServiceFactory;
-use Samuelpouzet\RestfulAuth\Service\Factory\JWTServiceFactory;
-use Samuelpouzet\RestfulAuth\Service\JWTService;
+
+use SamuelPouzet\RestfulAuth\Enumerations\AuthTypeEnum;
+
 
 return [
     'authentication' => [
@@ -26,6 +20,7 @@ return [
     'JWT' => [
         'signing_key' => 'Jenaimarredecessecuritesdemesdeuxetlàjedevraisdepasserallegrementlenombredecaracteres',
         'header' => [
+
             'iss' => 'http://www.example.com',
             'sub' => 'component1',
             'aud' => 'localhost',

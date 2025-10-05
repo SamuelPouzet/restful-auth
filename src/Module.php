@@ -1,6 +1,6 @@
 <?php
-
-namespace Samuelpouzet\RestfulAuth;
+declare(strict_types=1);
+namespace SamuelPouzet\RestfulAuth;
 
 class Module
 {
