@@ -3,7 +3,15 @@
 namespace Samuelpouzet\RestfulAuth\Strategy\Enumerations;
 
 
-use SamuelPouzet\RestfulAuth\Enumerations\AuthTypeEnum;
+use Samuelpouzet\RestfulAuth\Enumerations\AuthTypeEnum;
+use Samuelpouzet\RestfulAuth\Listener\Factory\RouteListenerFactory;
+use SamuelPouzet\RestfulAuth\Listener\RouteListener;
+use Samuelpouzet\RestfulAuth\Service\AccountService;
+use Samuelpouzet\RestfulAuth\Service\AuthenticationService;
+use Samuelpouzet\RestfulAuth\Service\Factory\AccountServiceFactory;
+use Samuelpouzet\RestfulAuth\Service\Factory\AuthenticationServiceFactory;
+use Samuelpouzet\RestfulAuth\Service\Factory\JWTServiceFactory;
+use Samuelpouzet\RestfulAuth\Service\JWTService;
 
 
 return [
@@ -29,9 +37,10 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            //needs a PR to clean on parent
-            AccountService::class => AccountServiceFactory::class,
+            //Listeners
             RouteListener::class => RouteListenerFactory::class,
+            //Services
+            AccountService::class => AccountServiceFactory::class,
             AuthenticationService::class => AuthenticationServiceFactory::class,
             JWTService::class => JWTServiceFactory::class,
         ],
