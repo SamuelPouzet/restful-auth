@@ -20,7 +20,7 @@
         }
     },
     "laminas": {
-        "component": "SamuelPouzet\\RestfulAuth"
+        "component": "Samuelpouzet\\RestfulAuth"
     },
     "authors": [
         {

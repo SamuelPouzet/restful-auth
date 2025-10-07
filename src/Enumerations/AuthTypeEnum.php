@@ -1,5 +1,5 @@
 <?php
-namespace SamuelPouzet\RestfulAuth\Enumerations;
+namespace Samuelpouzet\RestfulAuth\Enumerations;
 enum AuthTypeEnum
 {
     case permissive;

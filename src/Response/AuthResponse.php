@@ -2,25 +2,23 @@
 
 namespace Samuelpouzet\RestfulAuth\Response;
 
+use Samuelpouzet\RestfulAuth\Enumerations\AuthResponseCodeEnum;
 use Samuelpouzet\RestfulAuth\Interface\UserInterface;
 
 class AuthResponse
 {
-    public const CODE_SUCCESS = 1;
-    public const CODE_FAILURE = 0;
-
-    private int $status = self::CODE_SUCCESS;
+    private AuthResponseCodeEnum $status = AuthResponseCodeEnum::OK;
 
     private string $message = 'Allowed';
 
     private UserInterface $user;
 
-    public function getStatus(): int
+    public function getStatusCode(): AuthResponseCodeEnum
     {
         return $this->status;
     }
 
-    public function setStatus(int $status): AuthResponse
+    public function setStatusCode(AuthResponseCodeEnum $status): AuthResponse
     {
         $this->status = $status;
         return $this;
