@@ -9,7 +9,7 @@
         "php": ">=8.3",
         "laminas/laminas-mvc": "^3.7.0",
         "doctrine/doctrine-orm-module": "^6.3",
-        "samuelpouzet/restful": "^0.5.2",
+        "samuelpouzet/restful": ">=0.5.2",
         "lcobucci/jwt": "^5.5",
         "samuelpouzet/crypt": "^1.0",
         "doctrine/migrations": "^3.9"
@@ -19,8 +19,10 @@
             "Samuelpouzet\\RestfulAuth\\": "src/"
         }
     },
-    "laminas": {
-        "component": "Samuelpouzet\\RestfulAuth"
+    "extra": {
+        "laminas": {
+            "component": "Samuelpouzet\\RestfulAuth"
+        }
     },
     "authors": [
         {

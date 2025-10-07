@@ -14,6 +14,7 @@ class AuthenticationServiceFactory implements FactoryInterface
     {
         $jwtService = $container->get(JWTService::class);
         $accountService = $container->get(AccountService::class);
-        return new AuthenticationService($jwtService, $accountService);
+        $config = $container->get('config')['authentication'];
+        return new AuthenticationService($jwtService, $accountService, $config);
     }
 }

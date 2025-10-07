@@ -19,7 +19,6 @@ class RouteListener extends parentListener
         $request = $event->getRequest();
         $router = $event->getRouter();
         $routeMatch = $router->match($request);
-        $config = $event->getApplication()->getServiceManager()->get('config');
 
         if ($routeMatch instanceof RouteMatch) {
             //on récupère la méthode;
@@ -27,7 +26,7 @@ class RouteListener extends parentListener
             $event->setRouteMatch($routeMatch);
 
             //on check les droits d'accès
-            $this->authenticationService->authenticate($config, $event);
+            $this->authenticationService->authenticate($event);
             return $routeMatch;
         }
 

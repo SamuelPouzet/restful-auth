@@ -5,6 +5,8 @@ namespace Samuelpouzet\RestfulAuth\Controller\Factory;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
 use Samuelpouzet\RestfulAuth\Controller\LoginController;
+use Samuelpouzet\RestfulAuth\Service\IdentificationService;
+use Samuelpouzet\RestfulAuth\Service\JWTService;
 
 class LoginControllerFactory implements FactoryInterface
 {
@@ -14,6 +16,8 @@ class LoginControllerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): LoginController
     {
-        return new LoginController();
+        $identificationService = $container->get(IdentificationService::class);
+        $jwtService = $container->get(JWTService::class);
+        return new LoginController($identificationService, $jwtService);
     }
 }

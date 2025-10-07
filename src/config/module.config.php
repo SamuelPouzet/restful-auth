@@ -4,6 +4,8 @@ namespace Samuelpouzet\RestfulAuth\Strategy\Enumerations;
 
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Laminas\Router\Http\Literal;
+use Samuelpouzet\RestfulAuth\Adapter\AuthAdapter;
+use Samuelpouzet\RestfulAuth\Adapter\Factory\AuthAdapterFactory;
 use Samuelpouzet\RestfulAuth\Controller\Factory\LoginControllerFactory;
 use Samuelpouzet\RestfulAuth\Controller\LoginController;
 use Samuelpouzet\RestfulAuth\Entity\User;
@@ -15,7 +17,9 @@ use Samuelpouzet\RestfulAuth\Service\AccountService;
 use Samuelpouzet\RestfulAuth\Service\AuthenticationService;
 use Samuelpouzet\RestfulAuth\Service\Factory\AccountServiceFactory;
 use Samuelpouzet\RestfulAuth\Service\Factory\AuthenticationServiceFactory;
+use Samuelpouzet\RestfulAuth\Service\Factory\IdentificationServiceFactory;
 use Samuelpouzet\RestfulAuth\Service\Factory\JWTServiceFactory;
+use Samuelpouzet\RestfulAuth\Service\IdentificationService;
 use Samuelpouzet\RestfulAuth\Service\JWTService;
 
 
@@ -60,15 +64,20 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            //Adapters
+            AuthAdapter::class => AuthAdapterFactory::class,
             //Listeners
             RouteListener::class => RouteListenerFactory::class,
             //Services
             AccountService::class => AccountServiceFactory::class,
             AuthenticationService::class => AuthenticationServiceFactory::class,
+            IdentificationService::class => IdentificationServiceFactory::class,
             JWTService::class => JWTServiceFactory::class,
         ],
         'aliases' => [
+            'AuthAdapter' => AuthAdapter::class,
             'AuthenticationService' => AuthenticationService::class,
+            'IdentificationService' => IdentificationService::class,
             'JWTService' => JWTService::class,
             'RouteListener' => RouteListener::class,
         ]

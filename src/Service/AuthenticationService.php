@@ -11,14 +11,13 @@ use Samuelpouzet\RestfulAuth\Response\JwtResponse;
 
 class AuthenticationService
 {
-
     protected const string ALLOWED_FOR_ALL = '*';
-    protected array $config;
     protected string|array|null $filter;
 
     public function __construct(
         protected JWTService $jwtService,
         protected AccountService $accountService,
+        protected array $config,
         protected  $response = new AuthResponse()
     )
     {
@@ -29,11 +28,9 @@ class AuthenticationService
         return $this->response;
     }
 
-    public function authenticate(array $config, MvcEvent $event): void
+    //todo get config in factory !
+    public function authenticate(MvcEvent $event): void
     {
-        $this->config = $config['authentication'];
-
-
         if ($this->config['default'] === AuthTypeEnum::permissive) {
             $this->authenticatePermissive($event);
         } elseif ($this->config['default'] === AuthTypeEnum::restrictive) {
