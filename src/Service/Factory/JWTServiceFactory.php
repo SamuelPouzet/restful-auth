@@ -20,7 +20,7 @@ class JWTServiceFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): JWTService
     {
-        $config = $container->get('config')['JWT'] ?? null;
+        $config = $container->get('config')['samuelpouzet']['jwt'] ?? null;
         if(! $config) {
             throw new ServiceNotCreatedException('JWT config missing');
         }

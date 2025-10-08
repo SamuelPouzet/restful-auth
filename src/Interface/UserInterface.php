@@ -7,8 +7,8 @@ use DateTimeImmutable;
 interface UserInterface
 {
     public function getArrayCopy(): array;
-    public function getId(): string;
-    public function setId(string $id): static;
+    public function getId(): int;
+    public function setId(int $id): static;
     public function getLogin(): string;
     public function setLogin(string $login): static;
     public function getPassword(): string;

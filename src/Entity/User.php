@@ -4,10 +4,11 @@ namespace Samuelpouzet\RestfulAuth\Entity;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Samuelpouzet\RestfulAuth\Interface\UserInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'sp_user')]
-class User
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -40,7 +41,7 @@ class User
         return $this->id;
     }
 
-    public function setId(int $id): User
+    public function setId(int $id): static
     {
         $this->id = $id;
         return $this;
@@ -51,7 +52,7 @@ class User
         return $this->login;
     }
 
-    public function setLogin(string $login): User
+    public function setLogin(string $login): static
     {
         $this->login = $login;
         return $this;
@@ -62,7 +63,7 @@ class User
         return $this->password;
     }
 
-    public function setPassword(string $password): User
+    public function setPassword(string $password): static
     {
         $this->password = $password;
         return $this;
@@ -73,7 +74,7 @@ class User
         return $this->status;
     }
 
-    public function setStatus(int $status): User
+    public function setStatus(int $status): static
     {
         $this->status = $status;
         return $this;
@@ -84,7 +85,7 @@ class User
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeImmutable $createdAt): User
+    public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
         return $this;

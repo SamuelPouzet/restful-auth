@@ -15,8 +15,8 @@ class IdentificationService
     public function login(array $credentials): AuthResponse
     {
         return $this->authAdapter
-            ->setLogin($credentials['login'])
-            ->setPassword($credentials['password'])
+            ->setLogin($credentials['login'] ?? '')
+            ->setPassword($credentials['password'] ?? '')
             ->authenticate();
     }
 }

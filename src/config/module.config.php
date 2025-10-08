@@ -52,6 +52,7 @@ return [
 //            ]
         ]
     ],
+    //dodo voir si nécessaire
     'JWT' => [
         'signing_key' => 'Jenaimarredecessecuritesdemesdeuxetlàjedevraisdepasserallegrementlenombredecaracteres',
         'header' => [
@@ -61,6 +62,14 @@ return [
             'aud' => 'localhost',
             'jti' => '8AFH567FF9956',
         ],
+    ],
+    'samuelpouzet' => [
+        'jwt' => [
+            'issuedBy' => 'https://liberi_fatali.testapi.sam',
+            'permittedFor' => 'http://testapi.sam',
+            'relatedTo' => 'authentication',
+            'identifiedBy' => '1f5cb52ca',
+        ]
     ],
     'service_manager' => [
         'factories' => [
