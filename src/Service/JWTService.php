@@ -15,6 +15,7 @@ use Lcobucci\JWT\Validation\Constraint\PermittedFor;
 use Lcobucci\JWT\Validation\Constraint\RelatedTo;
 use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
 use Lcobucci\JWT\Validation\Validator;
+use Samuelpouzet\RestfulAuth\Enumerations\AuthTokenTypeEnum;
 use Samuelpouzet\RestfulAuth\Interface\UserInterface;
 use Samuelpouzet\RestfulAuth\Response\JwtResponse;
 
@@ -32,15 +33,13 @@ class JWTService
 
     public function decrypt(string $encrypted): Plain
     {
-        $token = $this->parser->parse($encrypted);
-        return $token;
+        return $this->parser->parse($encrypted);
     }
 
     public function validateToken(Plain $unencrypted): JwtResponse
     {
+        $response = new JwtResponse();
         try {
-            $response = new JwtResponse();
-
             if (isset($this->config['iss']) && ! $this->validator->validate($unencrypted, new IssuedBy($this->config['iss']))) {
                 $response->setStatusCode(JwtResponse::STATUS_KO);
                 $response->setMessage('iss failed');
@@ -80,8 +79,9 @@ class JWTService
         return $response;
     }
 
-    public function encodeUser(UserInterface $user): string
+    public function encodeUser(UserInterface $user, AuthTokenTypeEnum $type = AuthTokenTypeEnum::TYPE_AUTH): string
     {
+        $expiration = $type === AuthTokenTypeEnum::TYPE_AUTH ? $this->config['exp'] : $this->config['exp_refresh'];
         $now = new DateTimeImmutable();
         $token = $this->tokenBuilder
             // Configures the issuer (iss claim)
@@ -95,9 +95,10 @@ class JWTService
             // Configures the time that the token was issue (iat claim)
             ->issuedAt($now)
             // Configures the expiration time of the token (exp claim)
-            ->expiresAt($now->modify('+20 minutes'))
+            ->expiresAt($now->modify($expiration))
             // Configures a new claim, called "uid"
             ->withClaim('login', $user->getLogin() )
+            ->withClaim('token_type', $type)
             // Builds a new token
             ->getToken($this->algorithm, $this->signingKey);
         return $token->toString();
