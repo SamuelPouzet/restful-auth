@@ -98,7 +98,7 @@ class JWTService
             ->expiresAt($now->modify($expiration))
             // Configures a new claim, called "uid"
             ->withClaim('login', $user->getLogin() )
-            ->withClaim('token_type', $type)
+            ->withHeader('token_type', $type)
             // Builds a new token
             ->getToken($this->algorithm, $this->signingKey);
         return $token->toString();
