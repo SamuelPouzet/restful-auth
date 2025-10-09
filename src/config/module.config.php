@@ -1,13 +1,15 @@
 <?php
 
-namespace Samuelpouzet\RestfulAuth\Strategy\Enumerations;
+namespace Samuelpouzet\RestfulAuth;
 
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Laminas\Router\Http\Literal;
 use Samuelpouzet\RestfulAuth\Adapter\AuthAdapter;
 use Samuelpouzet\RestfulAuth\Adapter\Factory\AuthAdapterFactory;
 use Samuelpouzet\RestfulAuth\Controller\Factory\LoginControllerFactory;
+use Samuelpouzet\RestfulAuth\Controller\Factory\RefreshControllerFactory;
 use Samuelpouzet\RestfulAuth\Controller\LoginController;
+use Samuelpouzet\RestfulAuth\Controller\RefreshController;
 use Samuelpouzet\RestfulAuth\Entity\User;
 use Samuelpouzet\RestfulAuth\Enumerations\AuthTypeEnum;
 use Samuelpouzet\RestfulAuth\Interface\UserInterface;
@@ -22,7 +24,6 @@ use Samuelpouzet\RestfulAuth\Service\Factory\JWTServiceFactory;
 use Samuelpouzet\RestfulAuth\Service\IdentificationService;
 use Samuelpouzet\RestfulAuth\Service\JWTService;
 
-
 return [
     'router' => [
         'routes' => [
@@ -34,12 +35,22 @@ return [
                         'controller' => LoginController::class,
                     ],
                 ],
+            ],
+            'refresh' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/refresh',
+                    'defaults' => [
+                        'controller' => RefreshController::class,
+                    ],
+                ],
             ]
         ]
     ],
     'controllers' => [
         'factories' => [
             LoginController::class => LoginControllerFactory::class,
+            RefreshController::class => RefreshControllerFactory::class,
         ]
     ],
     'authentication' => [
@@ -52,7 +63,7 @@ return [
 //            ]
         ]
     ],
-    //dodo voir si nécessaire
+    //todo voir si nécessaire
     'JWT' => [
         'signing_key' => 'Jenaimarredecessecuritesdemesdeuxetlàjedevraisdepasserallegrementlenombredecaracteres',
         'header' => [
@@ -69,6 +80,8 @@ return [
             'permittedFor' => 'http://testapi.sam',
             'relatedTo' => 'authentication',
             'identifiedBy' => '1f5cb52ca',
+            'exp' => '+20 minutes',
+            'exp_refresh' => '+2 months',
         ]
     ],
     'service_manager' => [
@@ -92,14 +105,18 @@ return [
         ]
     ],
     'doctrine' => [
+        'entity_resolver' => [
+            'orm_default' => [
+                'resolvers' => [
+                    UserInterface::class => User::class,
+                ]
+            ],
+        ],
         'driver' => [
             __NAMESPACE__ . '_driver' => [
                 'class' => AttributeDriver::class,
                 'cache' => 'array',
-                'paths' => [__DIR__ . '/../src/Entity']
-            ],
-            'entity_resolver' => [
-                UserInterface::class => User::class
+                'paths' => [dirname(__DIR__) . '/Entity']
             ],
             'orm_default' => [
                 'drivers' => [
