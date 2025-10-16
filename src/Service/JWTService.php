@@ -79,10 +79,12 @@ class JWTService
         return $response;
     }
 
-    public function encodeUser(UserInterface $user, AuthTokenTypeEnum $type = AuthTokenTypeEnum::TYPE_AUTH): string
-    {
+    public function encodeUser(
+        DateTimeImmutable $now,
+        UserInterface $user,
+        AuthTokenTypeEnum $type = AuthTokenTypeEnum::TYPE_AUTH
+    ): string {
         $expiration = $type === AuthTokenTypeEnum::TYPE_AUTH ? $this->config['exp'] : $this->config['exp_refresh'];
-        $now = new DateTimeImmutable();
         $token = $this->tokenBuilder
             // Configures the issuer (iss claim)
             ->issuedBy($this->config['issuedBy'])
@@ -97,10 +99,11 @@ class JWTService
             // Configures the expiration time of the token (exp claim)
             ->expiresAt($now->modify($expiration))
             // Configures a new claim, called "uid"
-            ->withClaim('login', $user->getLogin() )
-            ->withHeader('token_type', $type)
+            ->withClaim('login', $user->getLogin())
+            ->withHeader('token_type', $type->name)
             // Builds a new token
             ->getToken($this->algorithm, $this->signingKey);
+
         return $token->toString();
     }
 }

@@ -7,6 +7,7 @@ use Samuelpouzet\Restful\Controller\AbstractRestfulController;
 use Samuelpouzet\RestfulAuth\Enumerations\AuthResponseCodeEnum;
 use Samuelpouzet\RestfulAuth\Enumerations\AuthTokenTypeEnum;
 use Samuelpouzet\RestfulAuth\Interface\LoginInterface;
+use Samuelpouzet\RestfulAuth\Manager\JWTManager;
 use Samuelpouzet\RestfulAuth\Service\IdentificationService;
 use Samuelpouzet\RestfulAuth\Service\JWTService;
 
@@ -14,7 +15,8 @@ class LoginController extends AbstractRestfulController implements LoginInterfac
 {
     public function __construct(
         protected IdentificationService $identificationService,
-        protected JWTService $jwtService
+        protected JWTService $jwtService,
+        protected JWTManager $jwtManager
     ) {
     }
     public function postAction(): JsonModel
@@ -24,8 +26,10 @@ class LoginController extends AbstractRestfulController implements LoginInterfac
 
         if ($response->getStatusCode() === AuthResponseCodeEnum::OK) {
             //création du token de connexion
-            $token = $this->jwtService->encodeUser($response->getUser());
-            $refresh = $this->jwtService->encodeUser($response->getUser(), AuthTokenTypeEnum::TYPE_REFRESH);
+            $now = new \DateTimeImmutable();
+            $token = $this->jwtService->encodeUser($now, $response->getUser());
+            $refresh = $this->jwtService->encodeUser($now, $response->getUser(), AuthTokenTypeEnum::TYPE_REFRESH);
+            $this->jwtManager->saveToken($refresh, $now);
             return new JsonModel([
                     "status" => "success",
                     'token' => $token,

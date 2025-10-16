@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
 use Samuelpouzet\RestfulAuth\Controller\RefreshController;
+use Samuelpouzet\RestfulAuth\Manager\JWTManager;
 use Samuelpouzet\RestfulAuth\Service\JWTService;
 
 class RefreshControllerFactory implements FactoryInterface
@@ -14,6 +15,7 @@ class RefreshControllerFactory implements FactoryInterface
     {
         $JwtService = $container->get(JwtService::class);
         $entityManager = $container->get(EntityManager::class);
-        return new RefreshController($JwtService, $entityManager);
+        $jwtManager = $container->get(JwtManager::class);
+        return new RefreshController($JwtService, $entityManager, $jwtManager);
     }
 }

@@ -15,6 +15,8 @@ use Samuelpouzet\RestfulAuth\Enumerations\AuthTypeEnum;
 use Samuelpouzet\RestfulAuth\Interface\UserInterface;
 use Samuelpouzet\RestfulAuth\Listener\Factory\RouteListenerFactory;
 use Samuelpouzet\RestfulAuth\Listener\RouteListener;
+use Samuelpouzet\RestfulAuth\Manager\Factory\JWTManagerFactory;
+use Samuelpouzet\RestfulAuth\Manager\JWTManager;
 use Samuelpouzet\RestfulAuth\Service\AccountService;
 use Samuelpouzet\RestfulAuth\Service\AuthenticationService;
 use Samuelpouzet\RestfulAuth\Service\Factory\AccountServiceFactory;
@@ -90,6 +92,8 @@ return [
             AuthAdapter::class => AuthAdapterFactory::class,
             //Listeners
             RouteListener::class => RouteListenerFactory::class,
+            // Managers
+            JWTManager::class => JWTManagerFactory::class,
             //Services
             AccountService::class => AccountServiceFactory::class,
             AuthenticationService::class => AuthenticationServiceFactory::class,
@@ -101,6 +105,7 @@ return [
             'AuthenticationService' => AuthenticationService::class,
             'IdentificationService' => IdentificationService::class,
             'JWTService' => JWTService::class,
+            'JWTManager' => JWTManager::class,
             'RouteListener' => RouteListener::class,
         ]
     ],

@@ -11,6 +11,7 @@ use Samuelpouzet\RestfulAuth\Enumerations\AuthTokenTypeEnum;
 use Samuelpouzet\RestfulAuth\Interface\LoginInterface;
 use \Laminas\View\Model\JsonModel;
 use Samuelpouzet\RestfulAuth\Interface\UserInterface;
+use Samuelpouzet\RestfulAuth\Manager\JWTManager;
 use Samuelpouzet\RestfulAuth\Service\JWTService;
 
 class RefreshController extends AbstractRestfulController implements LoginInterface
@@ -18,7 +19,8 @@ class RefreshController extends AbstractRestfulController implements LoginInterf
 
     public function __construct(
         protected JwtService             $jwtService,
-        protected EntityManagerInterface $entityManager
+        protected EntityManagerInterface $entityManager,
+        protected JWTManager             $jwtManager
     )
     {
     }
@@ -30,7 +32,12 @@ class RefreshController extends AbstractRestfulController implements LoginInterf
         if (!$token instanceof GenericHeader) {
             return $this->restFullError(Response::STATUS_CODE_403, 'no token');
         }
-        $decryptedToken = $this->jwtService->decrypt($token->getFieldValue());
+        $oldToken = $token->getFieldValue();
+        if (! $this->jwtManager->checkToken($oldToken)) {
+            return $this->restFullError(Response::STATUS_CODE_403, 'deleted or expired token');
+        }
+
+        $decryptedToken = $this->jwtService->decrypt($oldToken);
         if (!$decryptedToken) {
             return $this->restFullError(Response::STATUS_CODE_403, 'malformed token');
         }
@@ -42,9 +49,10 @@ class RefreshController extends AbstractRestfulController implements LoginInterf
             if (!$user) {
                 return $this->restFullError(Response::STATUS_CODE_403, 'invalid user');
             }
-
-            $token = $this->jwtService->encodeUser($user);
-            $refresh = $this->jwtService->encodeUser($user, AuthTokenTypeEnum::TYPE_REFRESH);
+            $now = new \DateTimeImmutable();
+            $token = $this->jwtService->encodeUser($now, $user);
+            $refresh = $this->jwtService->encodeUser($now, $user, AuthTokenTypeEnum::TYPE_REFRESH);
+            $this->jwtManager->updateToken($oldToken, $refresh, $now);
             return new JsonModel([
                     "status" => "success",
                     'token' => $token,
