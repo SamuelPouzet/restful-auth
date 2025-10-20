@@ -43,6 +43,17 @@ class ExceptionStrategy extends \Laminas\Mvc\View\Http\ExceptionStrategy
                 $this->renderExceptionViewModel($e, $model);
                 break;
 
+            case Application::ERROR_NEEDS_AUTH:
+                $response = new HttpResponse();
+                $response->setStatusCode(\Laminas\Http\Response::STATUS_CODE_401);
+                $e->setResponse($response);
+                $model = new JsonModel([
+                    'message' => 'Not token provided or expired',
+                    'display_exceptions' => $this->displayExceptions(),
+                ]);
+                $this->renderExceptionViewModel($e, $model);
+                break;
+
             case Application::ERROR_EXCEPTION:
             default:
                 if ($this->displayExceptions()) {

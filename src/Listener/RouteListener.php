@@ -31,12 +31,32 @@ class RouteListener extends parentListener
             $this->authenticationService->authenticate($event);
             $result = $this->authenticationService->getResponse();
             if ($result->getStatusCode() !== AuthResponseCodeEnum::OK) {
-                $this->dispatchError(
-                    $event,
-                    MvcEvent::EVENT_DISPATCH_ERROR,
-                    Application::ERROR_NOT_AUTHORIZED,
-                    Response::STATUS_CODE_403
-                );
+                switch ($result->getStatusCode()) {
+                    case AuthResponseCodeEnum::NEEDS_AUTH:
+                        $this->dispatchError(
+                            $event,
+                            MvcEvent::EVENT_DISPATCH_ERROR,
+                            Application::ERROR_NEEDS_AUTH,
+                            Response::STATUS_CODE_401
+                        );
+                        break;
+                    case AuthResponseCodeEnum::DENIED:
+                        $this->dispatchError(
+                            $event,
+                            MvcEvent::EVENT_DISPATCH_ERROR,
+                            Application::ERROR_NOT_AUTHORIZED,
+                            Response::STATUS_CODE_403
+                        );
+                        break;
+                    default:
+                        $this->dispatchError(
+                            $event,
+                            MvcEvent::EVENT_DISPATCH_ERROR,
+                            Application::ERROR_CONTROLLER_CANNOT_DISPATCH,
+                            Response::STATUS_CODE_500
+                        );
+                        break;
+                }
 
                 return $event->getParams();
             }
