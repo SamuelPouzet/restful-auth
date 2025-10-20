@@ -8,7 +8,7 @@ use Samuelpouzet\RestfulAuth\Service\Application;
 
 class ApplicationFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container, $name, ?array $options = null): Application
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): Application
     {
         return new Application(
             $container,
