@@ -18,13 +18,16 @@ use Samuelpouzet\RestfulAuth\Listener\RouteListener;
 use Samuelpouzet\RestfulAuth\Manager\Factory\JWTManagerFactory;
 use Samuelpouzet\RestfulAuth\Manager\JWTManager;
 use Samuelpouzet\RestfulAuth\Service\AccountService;
+use Samuelpouzet\RestfulAuth\Service\Application;
 use Samuelpouzet\RestfulAuth\Service\AuthenticationService;
 use Samuelpouzet\RestfulAuth\Service\Factory\AccountServiceFactory;
+use Samuelpouzet\RestfulAuth\Service\Factory\ApplicationFactory;
 use Samuelpouzet\RestfulAuth\Service\Factory\AuthenticationServiceFactory;
 use Samuelpouzet\RestfulAuth\Service\Factory\IdentificationServiceFactory;
 use Samuelpouzet\RestfulAuth\Service\Factory\JWTServiceFactory;
 use Samuelpouzet\RestfulAuth\Service\IdentificationService;
 use Samuelpouzet\RestfulAuth\Service\JWTService;
+use Samuelpouzet\RestfulAuth\Strategy\Factory\ExceptionStrategyFactory;
 
 return [
     'router' => [
@@ -58,23 +61,8 @@ return [
     'authentication' => [
         'default' => AuthTypeEnum::restrictive,
         'access_filters' => [
-//            AuthenticateController::class => [
-//                'get' => '*',
-//                'getall' => '@',
-//                'post' => '@'
-//            ]
-        ]
-    ],
-    //todo voir si nécessaire
-    'JWT' => [
-        'signing_key' => 'Jenaimarredecessecuritesdemesdeuxetlàjedevraisdepasserallegrementlenombredecaracteres',
-        'header' => [
 
-            'iss' => 'http://www.example.com',
-            'sub' => 'component1',
-            'aud' => 'localhost',
-            'jti' => '8AFH567FF9956',
-        ],
+        ]
     ],
     'samuelpouzet' => [
         'jwt' => [
@@ -94,13 +82,17 @@ return [
             RouteListener::class => RouteListenerFactory::class,
             // Managers
             JWTManager::class => JWTManagerFactory::class,
+            //Override listeners
+            'HttpExceptionStrategy' => ExceptionStrategyFactory::class,
             //Services
             AccountService::class => AccountServiceFactory::class,
+            Application::class => ApplicationFactory::class,
             AuthenticationService::class => AuthenticationServiceFactory::class,
             IdentificationService::class => IdentificationServiceFactory::class,
             JWTService::class => JWTServiceFactory::class,
         ],
         'aliases' => [
+            'Application' => Application::class,
             'AuthAdapter' => AuthAdapter::class,
             'AuthenticationService' => AuthenticationService::class,
             'IdentificationService' => IdentificationService::class,

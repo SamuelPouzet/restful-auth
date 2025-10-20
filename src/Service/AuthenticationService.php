@@ -6,6 +6,7 @@ namespace Samuelpouzet\RestfulAuth\Service;
 use Laminas\Mvc\MvcEvent;
 use Samuelpouzet\RestfulAuth\Enumerations\AuthResponseCodeEnum;
 use Samuelpouzet\RestfulAuth\Enumerations\AuthTypeEnum;
+use Samuelpouzet\RestfulAuth\Interface\LoginInterface;
 use Samuelpouzet\RestfulAuth\Response\AuthResponse;
 use Samuelpouzet\RestfulAuth\Response\JwtResponse;
 
@@ -36,7 +37,9 @@ class AuthenticationService
         } elseif ($this->config['default'] === AuthTypeEnum::restrictive) {
             $this->authenticateRestrictive($event);
         } else {
-            throw new \Exception('Unkonwn permission type, must be in AuthTypeEnum::permissive, AuthTypeEnum::restrictive');
+            throw new \Exception(
+                'Unkonwn permission type, must be in AuthTypeEnum::permissive, AuthTypeEnum::restrictive'
+            );
         }
     }
 
@@ -45,6 +48,11 @@ class AuthenticationService
         $routeMatch = $event->getRouteMatch();
         $controller = $routeMatch->getParam('controller');
         $method = $routeMatch->getParam('action');
+        if (is_subclass_of($controller, LoginInterface::class)) {
+            // no test on Login
+            $this->response->setStatusCode(AuthResponseCodeEnum::OK);
+            return;
+        }
 
         $this->filter = $this->config['access_filter'][$controller][$method] ?? null;
 
@@ -61,6 +69,11 @@ class AuthenticationService
         $controller = $routeMatch->getParam('controller');
         $method = $routeMatch->getParam('action');
 
+        if (is_subclass_of($controller, LoginInterface::class)) {
+            // no test on Login
+            $this->response->setStatusCode(AuthResponseCodeEnum::OK);
+            return;
+        }
         $this->filter = $this->config['access_filters'][$controller][$method] ?? null;
 
         if (!$this->filter) {
@@ -80,13 +93,14 @@ class AuthenticationService
     protected function authenticateBoth(MvcEvent $event): void
     {
         $token = $event->getRequest()->getHeaders()->get('Authorization');
+        $token = trim(str_ireplace('Authorization: Bearer', '', $token->toString()));
 
         if (!$token) {
             $this->response->setStatusCode(AuthResponseCodeEnum::NEEDS_AUTH);
             $this->response->setMessage('token missing');
             return;
         }
-        $token = trim(str_ireplace('Authorization: Bearer ', '', $token->toString()));
+
         $token = $this->jwtService->decrypt($token);
         $validation = $this->jwtService->validateToken($token);
 
