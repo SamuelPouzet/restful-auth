@@ -17,7 +17,7 @@ class LoginControllerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): LoginController
     {
-        $identificationService = $container->get(IdentificationService::class);
+        $identificationService = $container->get('IdentificationService');
         $jwtService = $container->get(JWTService::class);
         $jwtManager = $container->get(JwtManager::class);
         return new LoginController($identificationService, $jwtService, $jwtManager);
